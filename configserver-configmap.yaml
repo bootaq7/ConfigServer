@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configserverconfigs
+  namespace: default
+data:
+  configserver.git.url:  "https://https://github.com/bootaq7/config.git"
+  rabbitmq.host: rabbitmq-master
+  rabbitmq.port: "5672"
+  configserver.git.pass: xxx

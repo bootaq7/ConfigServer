@@ -1,0 +1,68 @@
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  labels: 
+    app: configserver
+    version: v1
+  name: configserver
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: configserver
+      version: v1
+  strategy: 
+    rollingUpdate: 
+      maxSurge: 1
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template: 
+    metadata: 
+      labels: 
+        app: configserver
+        version: v1
+    spec: 
+      containers: 
+        - 
+
+          image: "sasipune/configserver:1.0"
+          imagePullPolicy: Always
+          name: configserver
+          ports: 
+            - 
+              containerPort: 8888
+              hostPort: 8888
+              name: httpport
+          env: 
+            - 
+              name: configserver.git.url
+              valueFrom:
+                configMapKeyRef:
+                    name: configserverconfigs
+                    key: configserver.git.url
+            - 
+              name: configserver.git.username
+              valueFrom:
+                secretKeyRef:
+                    name: configserversecrets
+                    key: configserver.git.username
+            - 
+              name: configserver.git.pass
+              valueFrom:
+                configMapKeyRef:
+                    name: configserverconfigs
+                    key: configserver.git.pass
+
+            - 
+              name: rabbitmq.host
+              valueFrom:
+                configMapKeyRef:
+                    name: configserverconfigs
+                    key: rabbitmq.host
+            - 
+              name: rabbitmq.port
+              valueFrom:
+                configMapKeyRef:
+                    name: configserverconfigs
+                    key: rabbitmq.port
